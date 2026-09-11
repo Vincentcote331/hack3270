@@ -7,25 +7,24 @@
 
 ## ⚡ Quickstart Setup
 
-### Option 1: Universal 1-Liner (PowerShell) — Recommended
-**No git clone required.** Paste and run this single command in PowerShell — it automatically clones the repository into `C:\dev\tools\hack3270`, installs Python packages, sets up BlueZone, and configures Claude Code in one step:
+### 🚀 First-Time Setup (1-Liner in PowerShell)
+A brand-new user does **not** need git installed, does **not** need to download skills manually, and does **not** need to clone beforehand. Just paste this into PowerShell:
 
 ```powershell
 irm https://raw.githubusercontent.com/Vincentcote331/hack3270/main/setup.ps1 | iex
 ```
 
-### Option 2: From Claude Code (Zero-Terminal)
-If you have Claude Code open, just ask:
-> `"/hack3270-setup"` or *"Set up hack3270 and mainframe tools."*
+*This script bootstraps everything: clones the repository into `C:\dev\tools\hack3270`, installs Python packages, registers the MCP server in Claude Code, installs the Claude skills, and configures BlueZone.*
 
-Claude will automatically clone the repo to `C:\dev\tools\hack3270` and run the entire setup for you.
+---
 
-### Option 3: Manual Clone (If you prefer git first)
-```powershell
-git clone https://github.com/Vincentcote331/hack3270.git C:\dev\tools\hack3270
-cd C:\dev\tools\hack3270
-powershell -ExecutionPolicy Bypass -File .\setup-telus-3270.ps1
-```
+### 🔄 After Setup: Re-verification & Updates from Claude
+Once the setup script has run once on the machine, the skills are permanently active in Claude Code. You can then:
+* **Update / Re-verify**: Ask Claude `"/hack3270-setup"` to pull latest changes and verify dependencies.
+* **Connect**: Simply ask Claude *"Can you use TQC1?"* or *"Can you use ISMMF2?"*.
+
+---
+
 ### What the setup script does automatically:
 1. Installs Python dependencies (with `mcp<2` pinned for FastMCP compatibility).
 2. Installs 3 mainframe skills (`hack3270`, `hack3270-mcp-tutorial`, `tn3270-pentest`) into your `~/.claude/skills/`.
