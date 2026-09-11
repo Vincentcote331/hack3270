@@ -63,6 +63,7 @@ from PySide6.QtCore import Qt, QTimer, Signal, Slot, qInstallMessageHandler, QtM
 from PySide6.QtGui import QFont, QColor, QPalette, QAction
 import libhack3270
 import sys
+import time
 import signal
 import platform
 import logging
@@ -4301,22 +4302,23 @@ class ConnectionDialog(QWidget):
     """Simple dialog shown during connection setup"""
     def __init__(self, message):
         super().__init__()
-        self.setWindowTitle("Hack3270")
+        self.setWindowTitle("Hack3270 - Waiting for Connection")
         self.setStyleSheet(DARK_STYLE)
-        
-        # Get screen size and set window to half width, at top of screen
+        self.setWindowFlags(self.windowFlags() | Qt.WindowStaysOnTopHint)
+        # Get screen size and set window to appropriate width, at top of screen
         screen = QApplication.primaryScreen().geometry()
-        dialog_width = screen.width() // 2
-        dialog_height = 100
+        dialog_width = max(screen.width() // 2, 650)
+        dialog_height = 130
         self.setFixedSize(dialog_width, dialog_height)
         
         layout = QVBoxLayout(self)
-        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setContentsMargins(20, 15, 20, 15)
+        layout.setSpacing(10)
         
         self.label = QLabel(message)
         self.label.setAlignment(Qt.AlignCenter)
         self.label.setWordWrap(True)
-        self.label.setFont(QFont("Segoe UI", 12))
+        self.label.setFont(QFont("Segoe UI", 11))
         layout.addWidget(self.label)
         
         self.button = QPushButton("Click to Continue")
@@ -4327,7 +4329,7 @@ class ConnectionDialog(QWidget):
         self.clicked = False
         
         # Position at top of screen, centered horizontally
-        self.move((screen.width() - dialog_width) // 2, 0)
+        self.move((screen.width() - dialog_width) // 2, 10)
         
     def set_message(self, message):
         self.label.setText(message)
@@ -4343,6 +4345,7 @@ class ConnectionDialog(QWidget):
     def wait_for_click(self):
         while not self.clicked:
             QApplication.processEvents()
+            time.sleep(0.02)
 
 
 # Compatibility wrapper for existing code
@@ -4355,20 +4358,25 @@ class tkhack3270:
         # Handle initial connection flow - always wait for client first
         ip, port = hack3270.get_proxy_ip_port()
         
-        # Show connection waiting dialog
-        dialog = ConnectionDialog(f"Waiting for TN3270 connection on {ip}:{port}")
+        # Show connection waiting dialog with clear instructions
+        prompt_text = (
+            f"Waiting for TN3270 connection on {ip}:{port}\n"
+            f"👉 In BlueZone Session Manager, open or reconnect the 'hack3270' profile"
+        )
+        dialog = ConnectionDialog(prompt_text)
         dialog.show()
+        dialog.raise_()
+        dialog.activateWindow()
         QApplication.processEvents()
-        
-        # This blocks until a client connects
-        hack3270.client_connect()
+        # Poll with processEvents to prevent GUI freeze / Windows "Not Responding"
+        hack3270.client_connect(poll_fn=QApplication.processEvents)
         
         # Update dialog and wait for user click
-        dialog.set_message("Connection received.")
+        dialog.setWindowTitle("Hack3270 - Connected")
+        dialog.set_message("✅ Connection received from BlueZone!\nClick below to continue.")
         dialog.show_button()
         dialog.wait_for_click()
         dialog.close()
-        
         if not hack3270.is_offline():
             # Online mode - connect to the server
             hack3270.server_connect()

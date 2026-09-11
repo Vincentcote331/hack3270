@@ -5,6 +5,7 @@
 *_captures/
 *_flows.db
 old/
+sessions/
 
 # Python
 __pycache__/

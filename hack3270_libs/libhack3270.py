@@ -722,15 +722,17 @@ class hack3270:
 
     ## TCP/IP Functions
 
-    def client_connect(self):
+    def client_connect(self, poll_fn=None):
         '''Delegates to ProxyDaemon.wait_for_client.
         Aliases socket back so tend_server/send_key keep working.'''
         self.logger.debug("Setting up proxy listener on {}:{}".format(
             self.proxy_ip, self.proxy_port
         ))
-        self._daemon.wait_for_client()
+        if poll_fn is not None:
+            self._daemon.wait_for_client(poll_fn=poll_fn)
+        else:
+            self._daemon.wait_for_client()
         self.client = self._daemon.client
-
     def server_connect(self):
         '''Delegates to ProxyDaemon.connect_to_server.'''
         if self.offline_mode:

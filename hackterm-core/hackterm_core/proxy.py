@@ -76,17 +76,27 @@ class ProxyDaemon:
 
     # --- Connection lifecycle ----------------------------------------
 
-    def wait_for_client(self) -> None:
-        """Blocking accept(). Replaces client_connect (L779-801)."""
+    def wait_for_client(self, poll_interval: float = 0.05, poll_fn=None) -> None:
+        """Accept a client connection. If poll_fn is provided, periodically invokes it
+        to prevent GUI event loop starvation (e.g. Windows "Not Responding")."""
         self._listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self._listener.bind(self.listen_addr)
         self._listener.listen(1)
         self._log.debug("waiting for client on %s", self.listen_addr)
-        conn, peer = self._listener.accept()
+        if poll_fn is None:
+            conn, peer = self._listener.accept()
+        else:
+            self._listener.settimeout(poll_interval)
+            while True:
+                try:
+                    conn, peer = self._listener.accept()
+                    break
+                except (socket.timeout, TimeoutError):
+                    poll_fn()
+            self._listener.settimeout(None)
         self._log.debug("client connected from %s", peer)
         self.client = conn
-
     def connect_to_server(self) -> None:
         """Connect to the mainframe. Replaces server_connect (L803-845)."""
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -78,20 +78,8 @@ def resolve_target(target_arg):
 def switch_target(target_name, launch_bz=False):
     host, port, desc, key = resolve_target(target_name)
     
-    # Check if already running on this target
+    # Always stop old proxy to ensure a clean state and visible window
     running = get_running_proxy_info()
-    already_on_target = False
-    for p in running:
-        cmd = p.get("CommandLine", "")
-        if host.lower() in cmd.lower():
-            already_on_target = True
-            break
-            
-    if already_on_target:
-        print(f"hack3270 is ALREADY running and targeted at {desc} ({host}:{port}).")
-        return {"status": "already_running", "target": key, "host": host, "port": port}
-
-    # Stop any old proxy
     if running:
         stop_running_proxy()
 
@@ -104,19 +92,24 @@ def switch_target(target_name, launch_bz=False):
     hack_py = os.path.join(REPO_DIR, "hack3270.py")
     
     cmd = [
-        "python", hack_py,
+        sys.executable, hack_py,
         host, str(port),
         "-n", session_name
     ]
     
-    # Run detached in background so caller doesn't hang
+    # Run detached in background with log redirection so caller doesn't hang
+    # and detached process doesn't crash from invalid stdout/stderr handles
+    log_path = os.path.join(SESSIONS_DIR, f"{session_name}.log")
+    log_file = open(log_path, "a", encoding="utf-8")
     DETACHED_PROCESS = 0x00000008
     CREATE_NEW_PROCESS_GROUP = 0x00000200
     subprocess.Popen(
         cmd,
         cwd=SESSIONS_DIR,
         creationflags=DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP,
-        close_fds=True
+        stdin=subprocess.DEVNULL,
+        stdout=log_file,
+        stderr=log_file
     )
     
     print(f"Started hack3270 targeting: {desc}")
@@ -124,7 +117,8 @@ def switch_target(target_name, launch_bz=False):
     print(f"  Proxy Listening on: 127.0.0.1:3271")
     print(f"  MCP API on: 127.0.0.1:31337")
     print(f"  Session: {session_name}")
-    
+    print(f"")
+    print(f"  👉 NEXT STEP: Open BlueZone Session Manager, connect 'hack3270', then click 'Click to Continue'.")
     # Check BlueZone
     if launch_bz:
         bz_profile = r"C:\ProgramData\BlueZone\6.2\Config\hack3270.zmd"

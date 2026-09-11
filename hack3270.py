@@ -10,6 +10,7 @@ __license__ = "GPL-3.0"
 import sys
 import os
 _here = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, _here)
 sys.path.insert(0, os.path.join(_here, 'hackterm-core'))
 sys.path.insert(0, os.path.join(_here, 'hack3270_libs'))
 import gui
