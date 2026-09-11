@@ -124,7 +124,7 @@ def switch_target(target_name, launch_bz=False):
         bz_profile = r"C:\ProgramData\BlueZone\6.2\Config\hack3270.zmd"
         bz_exe = r"C:\Program Files (x86)\BlueZone\6.2\bzmd.exe"
         if os.path.exists(bz_exe) and os.path.exists(bz_profile):
-            subprocess.Popen([bz_exe, bz_profile], close_fds=True)
+            subprocess.Popen([bz_exe, f"/f{bz_profile}"], close_fds=True)
             print("Launched BlueZone with 'hack3270' profile.")
 
     return {"status": "started", "target": key, "host": host, "port": port}

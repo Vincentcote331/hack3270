@@ -58,9 +58,9 @@ Claude will automatically start the proxy for that target environment.
 ### Then in BlueZone:
 1. Open **BlueZone Session Manager**.
 2. Double-click the **`hack3270`** session (it connects to `127.0.0.1:3271`).
-3. On the hack3270 GUI pop-up, click **Continue**.
+   *(Tip: You can also pass `-BlueZone` to PowerShell to launch it automatically: `.\launch-hack3270.ps1 -Target tqc1 -BlueZone`)*
+3. On the top banner window (**`Hack3270 - Waiting for Connection`**), the status will change to **"✅ Connection received from BlueZone!"**. Click **Click to Continue**.
 4. Your mainframe screen appears in BlueZone!
-
 ---
 
 ## 🏢 Supported TELUS Mainframe Environments
@@ -148,7 +148,9 @@ In Claude Code, type:
 > *"Reconnect to the hack3270 API using reconnect_api."*
 Make sure hack3270 is running and you have clicked **Continue** on the connection pop-up.
 
----
+### 4. BlueZone prompts "Select or Create New Profile"
+If BlueZone ever asks you to select a profile file, choose:  
+`C:\ProgramData\BlueZone\6.2\Config\hack3270.zmd`
 
 ## 📚 Repository Structure
 
