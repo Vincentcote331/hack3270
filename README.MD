@@ -7,18 +7,20 @@
 
 ## ⚡ Quickstart Setup
 
-### Option 1: Universal 1-Liner (PowerShell)
-Paste and run this single command in PowerShell — it automatically clones, sets up Python, installs BlueZone profiles, and configures Claude:
+### Option 1: Universal 1-Liner (PowerShell) — Recommended
+**No git clone required.** Paste and run this single command in PowerShell — it automatically clones the repository into `C:\dev\tools\hack3270`, installs Python packages, sets up BlueZone, and configures Claude Code in one step:
 
 ```powershell
 irm https://raw.githubusercontent.com/Vincentcote331/hack3270/main/setup.ps1 | iex
 ```
 
-### Option 2: From Claude Code
-If you have the skill loaded, simply ask Claude:
+### Option 2: From Claude Code (Zero-Terminal)
+If you have Claude Code open, just ask:
 > `"/hack3270-setup"` or *"Set up hack3270 and mainframe tools."*
 
-### Option 3: Manual Clone & Setup
+Claude will automatically clone the repo to `C:\dev\tools\hack3270` and run the entire setup for you.
+
+### Option 3: Manual Clone (If you prefer git first)
 ```powershell
 git clone https://github.com/Vincentcote331/hack3270.git C:\dev\tools\hack3270
 cd C:\dev\tools\hack3270
