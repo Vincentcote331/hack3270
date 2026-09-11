@@ -5,16 +5,25 @@
 
 ---
 
-## ⚡ 1-Minute Quickstart
+## ⚡ Quickstart Setup
 
-Run in PowerShell as Administrator or standard user:
+### Option 1: Universal 1-Liner (PowerShell)
+Paste and run this single command in PowerShell — it automatically clones, sets up Python, installs BlueZone profiles, and configures Claude:
 
+```powershell
+irm https://raw.githubusercontent.com/Vincentcote331/hack3270/main/setup.ps1 | iex
+```
+
+### Option 2: From Claude Code
+If you have the skill loaded, simply ask Claude:
+> `"/hack3270-setup"` or *"Set up hack3270 and mainframe tools."*
+
+### Option 3: Manual Clone & Setup
 ```powershell
 git clone https://github.com/Vincentcote331/hack3270.git C:\dev\tools\hack3270
 cd C:\dev\tools\hack3270
 powershell -ExecutionPolicy Bypass -File .\setup-telus-3270.ps1
 ```
-
 ### What the setup script does automatically:
 1. Installs Python dependencies (with `mcp<2` pinned for FastMCP compatibility).
 2. Installs 3 mainframe skills (`hack3270`, `hack3270-mcp-tutorial`, `tn3270-pentest`) into your `~/.claude/skills/`.

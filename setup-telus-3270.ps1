@@ -71,6 +71,12 @@ $SkillsConfig = @(
         File = "tn3270-pentest.md"
         Name = "tn3270-pentest"
         Desc = "Comprehensive mainframe technical knowledge base covering TN3270 protocol, CICS system transactions, TSO, JCL, and abend codes."
+    },
+    @{
+        Dir = "hack3270-setup"
+        File = "hack3270-setup.md"
+        Name = "hack3270-setup"
+        Desc = "Automatically install, setup, update, and verify hack3270, BlueZone profiles, Python dependencies, and Claude MCP server for TELUS mainframe connectivity."
     }
 )
 
