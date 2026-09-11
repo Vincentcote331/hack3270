@@ -22,6 +22,7 @@ Write-Host "============================================================" -Foreg
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 
+New-Item -ItemType Directory -Force -Path (Join-Path $ScriptDir "sessions") | Out-Null
 # -------------------------------------------------------------
 # 1. Check Python
 # -------------------------------------------------------------
